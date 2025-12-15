@@ -1,34 +1,16 @@
 // *******************************************************************
 // ⚠️ PASTIKAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI SINI
-// URL ini harus dari hasil deploy Apps Script Anda.
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxJwmarovvMaPuvvD8qTifeSgCcPLeJJ30xOjjoJKLXbSuuW7eySU9ecVMxMbn4Am60/exec'; 
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz_jXIpLvNsmUURxAjCFv43KNY8avsz5yVitnNS2F_MmluNV7aPKi2JJDrbcE4CKlDf/exec'; 
 // *******************************************************************
 
-// --- KUNCI JAWABAN (Dibutuhkan untuk menghitung skor di frontend) ---
+// --- KUNCI JAWABAN ---
 const KUNCI_JAWABAN = {
-    'soal1': 'YA', 
-    'soal2': 'YA',
-    'soal3': 'YA',
-    'soal4': 'YA',
-    'soal5': 'TIDAK',
-    'soal6': 'YA',
-    'soal7': 'YA',
-    'soal8': 'YA',
-    'soal9': 'YA',
-    'soal10': 'YA',
-    'soal11': 'YA',
-    'soal12': 'YA',
-    'soal13': 'YA',
-    'soal14': 'YA',
-    'soal15': 'YA',
-    'soal16': 'TIDAK', // Kunci yang disepakati
-    'soal17': 'TIDAK', // Kunci yang disepakati
-    'soal18': 'TIDAK', // Kunci yang disepakati
-    'soal19': 'TIDAK', // Kunci yang disepakati
-    'soal20': 'YA'
+    'soal1': 'YA', 'soal2': 'YA', 'soal3': 'YA', 'soal4': 'YA', 'soal5': 'TIDAK',
+    'soal6': 'YA', 'soal7': 'YA', 'soal8': 'YA', 'soal9': 'YA', 'soal10': 'YA',
+    'soal11': 'YA', 'soal12': 'YA', 'soal13': 'YA', 'soal14': 'YA', 'soal15': 'YA',
+    'soal16': 'TIDAK', 'soal17': 'TIDAK', 'soal18': 'TIDAK', 'soal19': 'TIDAK', 'soal20': 'YA'
 };
 
-// Data Soal 20 Pertanyaan
 const questions = [
     "1. Cara yang paling ampuh bagi remaja yang belum menikah agar tidak tertular penyakit menular seksual adalah dengan tidak melakukan hubungan seksual baik oral, vaginal, atau anal",
     "2. Cara memakai kondom yang tidak benar dapat memungkinkan untuk terjadi kehamilan atau terkena penyakit menular seksual",
@@ -50,11 +32,9 @@ const questions = [
     "18. Kita akan beresiko tertular penyakit menular seksual hanya bila berhubungan seks dengan pekerja seks komersial",
     "19. Penyakit menular seksual hanya terjadi pada orang yang homoseksual",
     "20. Seks diluar nikah sama dengan seks bebas atau seks tidak aman"
-    // TIDAK ADA KOMA DI SINI! (Memastikan questions.length = 20)
 ];
 
-// Variabel status global
-let currentPage = -1; // -1 = Halaman Pengantar, 0=Identitas, 1-20=Soal, 21=Reward
+let currentPage = -1; 
 const userAnswers = {}; 
 const kuisionerForm = document.getElementById('kuisioner-form');
 
@@ -74,33 +54,34 @@ function renderPage() {
     }
 }
 
-// --- (-1) RENDER HALAMAN PENGANTAR (Aesthetic) ---
+// --- (-1) RENDER HALAMAN PENGANTAR (Dark Mode Aesthetic) ---
 function renderIntroPage() {
+    // Styling di sini disederhanakan karena gaya utama ada di CSS
     kuisionerForm.innerHTML = `
-        <div id="intro-page" style="text-align: center; padding: 20px;">
-            <h2 style="color: #0096c7; font-size: 2em; margin-bottom: 10px;">
+        <div id="intro-page" style="text-align: center; padding: 10px 0;">
+            <h2 style="color: #00ffff; font-size: 2em; margin-bottom: 10px;">
                 🎉 Selamat Datang! 🎉
             </h2>
-            <h3 style="color: #3b82f6; margin-bottom: 30px; font-weight: 500;">
+            <h3 style="color: #ff00ff; margin-bottom: 30px; font-weight: 500;">
                 Pemberitahuan Penting Mengenai Kuisioner
             </h3>
             
-            <div style="background-color: #e3f2fd; padding: 25px; border-radius: 12px; border: 2px solid #a8dadc; margin-bottom: 35px; text-align: left;">
-                <p style="font-size: 1.1em; line-height: 1.7; color: #1a5e7b;">
+            <div style="background-color: rgba(0, 255, 255, 0.05); padding: 25px; border-radius: 12px; border: 2px solid #00ffff; margin-bottom: 35px; text-align: left; box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);">
+                <p style="font-size: 1.1em; line-height: 1.7; color: #e0ffff;">
                     Kuisioner ini merupakan bagian dari 
-                    <span style="font-weight: bold; color: #0077b6;">Penelitian Tugas Kokulikuler</span> 
+                    <span style="font-weight: bold; color: #ff00ff;">Penelitian Tugas Kokulikuler</span> 
                     yang dilaksanakan oleh kelompok 
-                    <span style="font-weight: bold; color: #0077b6;">DYNA</span> 
+                    <span style="font-weight: bold; color: #ff00ff;">DYNA</span> 
                     dari 
-                    <span style="font-weight: bold; color: #0077b6;">Kelas 9B SMP Negeri 1 Kalasan</span>.
+                    <span style="font-weight: bold; color: #ff00ff;">Kelas 9B SMP Negeri 1 Kalasan</span>.
                 </p>
-                <hr style="border: 0; border-top: 1px solid #c9e6ff; margin: 15px 0;">
-                <p style="font-size: 1em; color: #555;">
+                <hr style="border: 0; border-top: 1px solid rgba(0, 255, 255, 0.3); margin: 15px 0;">
+                <p style="font-size: 1em; color: #ccc;">
                     Seluruh data dan jawaban yang Anda berikan akan dijaga kerahasiaannya dan hanya akan digunakan untuk tujuan akademis dan penelitian kelompok kami.
                 </p>
             </div>
             
-            <h4 style="color: #2a9d8f; margin-top: 30px; font-style: italic;">
+            <h4 style="color: #90ee90; margin-top: 30px; font-style: italic;">
                 Terima kasih atas kesediaan dan partisipasi Anda.
             </h4>
             
@@ -114,22 +95,16 @@ function renderIntroPage() {
 
 // --- 1. RENDER HALAMAN IDENTITAS BARU (Nama & Rentang Umur) ---
 function renderIdentitasPage() {
-    // Array pilihan rentang usia
     const ageRanges = [
-        'Pilih Rentang Usia', // Placeholder pertama
-        '10-19 tahun',
-        '20-30 tahun',
-        '>30 tahun'
+        'Pilih Rentang Usia', '10-19 tahun', '20-30 tahun', '>30 tahun'
     ];
     
-    // Membuat HTML untuk opsi dropdown
     const optionsHtml = ageRanges.map(range => 
-        // Penting: Value kosong jika placeholder terpilih
         `<option value="${range === 'Pilih Rentang Usia' ? '' : range}" ${userAnswers.umur === range ? 'selected' : ''}>${range}</option>`
     ).join('');
 
     kuisionerForm.innerHTML = `
-        <h2>Selamat Datang di Kuisioner DYNA Squad 9B</h2>
+        <h2>Input Data Diri</h2>
         <h3>Mohon Isi Data Diri Anda</h3>
         <div class="input-group">
             <label for="nama">Nama:</label>
@@ -147,24 +122,22 @@ function renderIdentitasPage() {
     `;
 }
 
-// Fungsi untuk memvalidasi dan menyimpan data identitas
 function nextPageIdentitas() {
     const nama = document.getElementById('nama').value.trim();
-    const umur = document.getElementById('umur').value; // Mengambil nilai dari dropdown value
+    const umur = document.getElementById('umur').value; 
 
     if (!nama) {
         alert('Mohon lengkapi Nama Anda.');
         return;
     }
     
-    // Validasi Umur: Jika value-nya kosong ('') berarti placeholder yang terpilih.
     if (!umur) {
         alert('Mohon pilih Rentang Umur Anda.');
         return;
     }
 
     userAnswers.nama = nama;
-    userAnswers.umur = umur; // Data Umur disimpan dengan kunci 'umur'
+    userAnswers.umur = umur; 
     
     currentPage = 1; 
     renderPage();
@@ -188,25 +161,20 @@ function renderQuestionPage(qNumber) {
     `;
 }
 
-// --- Fungsi untuk menghitung total jawaban benar ---
 function calculateScore() {
     let correctCount = 0;
     
-    // Looping dari soal1 sampai soal20 (questions.length = 20)
     for (let i = 1; i <= questions.length; i++) {
         const key = 'soal' + i; 
         
-        // Membandingkan jawaban user dengan KUNCI_JAWABAN
         if (userAnswers[key] && userAnswers[key] === KUNCI_JAWABAN[key]) {
             correctCount++; 
         }
     }
     
-    // PENTING: Variabel 'totalBenar' disimpan di sini
     userAnswers.totalBenar = correctCount; 
 }
 
-// Fungsi untuk Menyimpan Jawaban (MENGGUNAKAN KUNCI 'soalN')
 function submitAnswer(qNumber, answer) {
     userAnswers['soal' + qNumber] = answer; 
     currentPage++;
@@ -214,7 +182,7 @@ function submitAnswer(qNumber, answer) {
     if (currentPage <= questions.length) {
         renderPage(); 
     } else {
-        calculateScore(); // HITUNG SKOR SEBELUM DIKIRIM
+        calculateScore(); 
         submitDataToSheets();
     }
 }
@@ -222,16 +190,14 @@ function submitAnswer(qNumber, answer) {
 
 // --- 3. KIRIM DATA KE GOOGLE SHEETS (DENGAN SPINNER) ---
 async function submitDataToSheets() {
-    // Tampilkan pesan loading dengan spinner
     kuisionerForm.innerHTML = `
         <div id="loading-message">
             <div class="loading-spinner"></div>
             <h3>Sedang Mengirim Data...</h3>
-            <p>Mohon tunggu sebentar hingga muncul ucapan terima kasih.</p>
+            <p style="color: #ccc;">Mohon tunggu sebentar hingga muncul ucapan terima kasih.</p>
         </div>
     `;
     
-    // Konversi objek jawaban menjadi format URL-encoded (form data)
     const params = new URLSearchParams();
     for (const key in userAnswers) {
         params.append(key, userAnswers[key]);
@@ -250,59 +216,53 @@ async function submitDataToSheets() {
         const result = await response.json();
 
         if (response.ok && result.result === "success") {
-            // Sukses: Pindah ke halaman reward
             currentPage = questions.length + 1; 
             renderPage();
         } else {
-            // Error dari Apps Script atau Respons HTTP non-200
-            kuisionerForm.innerHTML = '<h3 style="color:red;">ERROR Pengiriman:</h3><p>Gagal menyimpan data ke Google Sheets. Detail: ' + (result.message || 'Unknown Error') + '</p>';
+            kuisionerForm.innerHTML = '<h3 style="color:red;">ERROR Pengiriman:</h3><p style="color: #ccc;">Gagal menyimpan data ke Google Sheets. Detail: ' + (result.message || 'Unknown Error') + '</p>';
         }
 
     } catch (error) {
         console.error('Submission Error:', error);
-        // Error jaringan/koneksi
         kuisionerForm.innerHTML = `
             <h3 style="color:red;">KESALAHAN JARINGAN/SISTEM</h3>
-            <p>Terjadi kesalahan saat menghubungi server Google Apps Script. (${error.message})</p>
+            <p style="color: #ccc;">Terjadi kesalahan saat menghubungi server Google Apps Script. (${error.message})</p>
             <button class="btn-primary" style="margin-top:20px;" onclick="window.location.reload()">Coba Lagi</button>
         `;
     }
 }
 
 
-// --- 4. RENDER HALAMAN TERIMA KASIH (REWARD dengan Hadiah Opsional) ---
+// --- 4. RENDER HALAMAN TERIMA KASIH (REWARD Opsional) ---
 function renderRewardPage() {
     
     // ⚠️ GANTI DENGAN NOMOR WHATSAPP AKTIF PENELITI!
-    const whatsappNumber = '6281227446501'; 
+    const whatsappNumber = '6281227324594'; 
 
-    // Fungsi untuk menghasilkan URL WhatsApp dengan teks otomatis
     function createWhatsAppLink(reward) {
         let message = `Halo, saya ${userAnswers.nama || 'Pengguna'} dari ${userAnswers.umur || 'Rentang Usia'}. Saya telah menyelesaikan kuisioner dan memilih hadiah: ${reward}. Mohon petunjuk klaim hadiah ini. Terima kasih!`;
-        
-        // Encode URI Component memastikan spasi dan karakter lain aman untuk URL
         return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     }
 
     kuisionerForm.innerHTML = `
         <div id="reward-page" style="text-align: center; padding: 40px;">
-            <h2 style="color: #2a9d8f; font-size: 2.2em; margin-bottom: 15px;">
+            <h2 style="color: #00ffff; font-size: 2.2em; margin-bottom: 15px;">
                 ✅ Kuisioner Selesai!
             </h2>
-            <h3 style="color: #0077b6; font-size: 1.5em; margin-bottom: 25px;">
+            <h3 style="color: #ff00ff; font-size: 1.5em; margin-bottom: 25px;">
                 Terima kasih banyak, 
-                <span style="font-weight: bold; color: #f75c6c;">${userAnswers.nama || 'Pengguna'}</span>!
+                <span style="font-weight: bold; color: #ff00ff;">${userAnswers.nama || 'Pengguna'}</span>!
             </h3>
             
-            <div style="background-color: #e6fff5; padding: 20px; border-radius: 10px; border: 1px solid #2a9d8f; margin-bottom: 30px;">
-                <p style="font-size: 1.1em;">
+            <div style="background-color: rgba(0, 255, 255, 0.05); padding: 20px; border-radius: 10px; border: 1px solid #00ffff; margin-bottom: 30px;">
+                <p style="font-size: 1.1em; color: #ccc;">
                     Data Anda telah berhasil direkam dan disimpan.
                 </p>
             </div>
             
-            <div id="reward-box" class="reward-box" style="background-color: #fff9e6; border: 2px solid #ffcc00; border-radius: 15px; padding: 25px; box-shadow: 0 4px 15px rgba(255, 165, 0, 0.2); margin-bottom: 30px;">
-                <h4 style="color: #ff8c00; font-size: 1.4em; margin-bottom: 10px; font-weight: bold;">🎁 Klaim Hadiah Anda (Opsional)!</h4>
-                <p style="color: #555; margin-bottom: 25px; font-style: italic;">Anda berhak memilih salah satu hadiah di bawah ini sebagai apresiasi.</p>
+            <div id="reward-box" class="reward-box" style="background-color: rgba(255, 0, 255, 0.05); border: 2px solid #ff00ff; border-radius: 15px; padding: 25px; box-shadow: 0 0 10px rgba(255, 0, 255, 0.5); margin-bottom: 30px;">
+                <h4 style="color: #ff00ff; font-size: 1.4em; margin-bottom: 10px; font-weight: bold;">🎁 Klaim Hadiah Anda (Opsional)!</h4>
+                <p style="color: #ccc; margin-bottom: 25px; font-style: italic;">Anda berhak memilih salah satu hadiah di bawah ini sebagai apresiasi.</p>
                 
                 <div class="reward-buttons" style="display: flex; flex-direction: column; gap: 15px;">
                     
@@ -319,19 +279,65 @@ function renderRewardPage() {
                     </a>
                 </div>
             </div>
-            <hr style="margin: 30px auto; width: 50%; border: 0; border-top: 1px solid #ddd;">
+            <hr style="margin: 30px auto; width: 50%; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.2);">
             
             <button class="btn-secondary" onclick="window.close()" style="margin-top: 20px;">
                 TUTUP HALAMAN / SELESAI
             </button>
 
-            <p style="font-size: 0.9em; color: #666; margin-top: 20px;">
+            <p style="font-size: 0.9em; color: #ccc; margin-top: 20px;">
                 Jika Anda sudah mengklaim hadiah atau tidak ingin mengklaim, silakan tekan tombol di atas.
             </p>
         </div>
     `;
 }
 
+// --- LOGIKA WATERMARK DAN SALJU JATUH (Aesthetic Background) ---
+
+const WATERMARK_TEXT = 'Made by Yunan';
+const BACKGROUND_SYMBOLS = ['❄', '⭐', '✨', '⚡'];
+
+function createBackgroundParticle(type = 'watermark') {
+    const parentElement = document.getElementById('watermark-bg');
+    if (!parentElement) return;
+
+    const particle = document.createElement('div');
+    
+    if (type === 'watermark') {
+        particle.className = 'watermark';
+        particle.textContent = WATERMARK_TEXT;
+        particle.style.animationDuration = Math.random() * 15 + 15 + 's'; // 15-30s
+        particle.style.animationDelay = Math.random() * 15 + 's'; 
+        particle.style.opacity = Math.random() * 0.7 + 0.3; 
+
+    } else { // Salju/Simbol
+        particle.className = 'snowflake';
+        const symbol = BACKGROUND_SYMBOLS[Math.floor(Math.random() * BACKGROUND_SYMBOLS.length)];
+        particle.innerHTML = symbol;
+        particle.style.animationDuration = Math.random() * 10 + 8 + 's'; // 8-18s
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.fontSize = Math.random() * 12 + 8 + 'px'; 
+    }
+    
+    particle.style.left = Math.random() * window.innerWidth + 'px';
+    parentElement.appendChild(particle);
+
+    particle.addEventListener('animationend', () => {
+        particle.remove();
+    });
+}
+
+function startBackgroundEffects() {
+    // Membuat Watermark (Interval Lambat)
+    setInterval(() => createBackgroundParticle('watermark'), 3000); 
+    
+    // Membuat Salju/Simbol (Interval Cepat)
+    setInterval(() => createBackgroundParticle('symbol'), 500); 
+}
+
 
 // --- INISIALISASI ---
-document.addEventListener('DOMContentLoaded', renderPage);
+document.addEventListener('DOMContentLoaded', () => {
+    renderPage();
+    startBackgroundEffects();
+});
