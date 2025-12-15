@@ -1,241 +1,170 @@
-/* =========================================
-   CLEAN DARK AESTHETIC (SIMPLIFIED GLOW)
-   ========================================= */
+/* RESET & FONT */
+* {
+    box-sizing: border-box;
+}
 
-/* KEYFRAMES (Definisi Animasi Gerak) */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #e2e8f0; /* Teks putih gading */
+    /* Latar belakang gelap total */
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    overflow-x: hidden; /* Mencegah scroll samping */
+}
+
+/* ANIMASI HALUS */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-@keyframes snowfall {
-    0% { transform: translateY(-100vh); opacity: 0; }
-    100% { transform: translateY(100vh); opacity: 1; }
-}
-@keyframes watermarkFall {
-    0% { transform: translateY(-100px); opacity: 0; }
-    10% { opacity: 0.5; } /* Opacity dikurangi agar tidak terlalu mencolok */
-    100% { transform: translateY(100vh); opacity: 0; }
+
+@keyframes fall {
+    0% { transform: translateY(-10vh); opacity: 0; }
+    10% { opacity: 0.5; }
+    100% { transform: translateY(110vh); opacity: 0; }
 }
 
-
-/* ------------------------------------- */
-/* 1. STYLING DASAR */
-/* ------------------------------------- */
-
-body {
-    font-family: 'Poppins', sans-serif; /* Pastikan font ini dimuat di HTML head */
-    color: #e0e0e0; /* Warna teks sedikit lebih lembut dari putih murni */
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    min-height: 100vh;
-    padding: 30px 20px;
-    margin: 0;
-    overflow-x: hidden; 
-    
-    /* BACKGROUND GELAP GRADASI HALUS */
-    background: linear-gradient(135deg, #0f172a 0%, #000000 100%); 
-}
-
+/* CONTAINER UTAMA - SATU KOTAK BERSIH */
 .container {
-    /* TAMPILAN BERSIH: Glow luar dihilangkan */
-    background: rgba(30, 41, 59, 0.98); /* Biru gelap solid */
-    padding: 35px 45px;
-    border-radius: 16px; 
-    max-width: 750px; 
+    background-color: rgba(30, 41, 59, 0.95); /* Slate gelap transparan */
+    padding: 40px;
+    border-radius: 20px;
     width: 100%;
+    max-width: 600px; /* Ukuran pas, tidak terlalu lebar */
     
-    /* Border tipis dan bayangan halus untuk kedalaman, BUKAN glow neon */
+    /* Border halus & Bayangan elegan (Bukan Glow Norak) */
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Bayangan gelap biasa */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); 
+    
+    /* Animasi muncul */
+    animation: fadeIn 0.8s ease-out;
 }
 
-h2, h3 {
+/* TYPOGRAPHY */
+h2 {
     text-align: center;
-    color: #00ffff; /* Cyan tetap digunakan sebagai warna aksen */
+    color: #38bdf8; /* Biru muda langit */
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+h3 {
+    text-align: center;
+    color: #94a3b8; /* Abu-abu terang */
+    font-size: 1rem;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+/* INPUT & FORM */
+.input-group {
     margin-bottom: 25px;
-    text-shadow: none; /* HILANGKAN GLOW PADA TEKS */
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #38bdf8;
     font-weight: 600;
 }
 
-/* Styling khusus untuk kotak di halaman pengantar agar lebih rapi */
-#intro-page div {
-    box-shadow: none !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    background-color: rgba(255, 255, 255, 0.03) !important;
-}
-
-
-/* ------------------------------------- */
-/* 2. STYLING INPUT & FORM (BERSIH) */
-/* ------------------------------------- */
-
-.input-group {
-    margin-bottom: 30px; 
-}
-.input-group label {
-    color: #00ffff; /* Warna aksen */
-    font-size: 1.1em;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 10px;
-    text-shadow: none; /* Hilangkan glow */
-}
-
-.input-group input, .input-group select {
-    width: 100%; 
-    padding: 15px; 
-    font-size: 1em;
-    background-color: rgba(0, 0, 0, 0.2); /* Background input lebih gelap */
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Border subtle */
-    border-radius: 8px; 
-    box-shadow: none; /* Hilangkan inner glow */
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-/* Saat Fokus: Hanya ubah warna border menjadi Cyan terang, TANPA glow pendar */
-.input-group input:focus, .input-group select:focus {
-    border-color: #00ffff; 
-    box-shadow: none; 
+.input-group input, 
+.input-group select {
+    width: 100%;
+    padding: 15px;
+    background-color: #0f172a; /* Lebih gelap dari container */
+    border: 1px solid #334155;
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
     outline: none;
+    transition: border-color 0.3s;
 }
 
-/* ------------------------------------- */
-/* 3. KOTAK SOAL (BERSIH & JELAS) */
-/* ------------------------------------- */
+.input-group input:focus, 
+.input-group select:focus {
+    border-color: #38bdf8; /* Fokus biru */
+}
 
+/* KOTAK SOAL - RAPI TANPA GARIS SAMPING */
 .question-content {
-    background-color: rgba(255, 255, 255, 0.05); 
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Border sangat tipis */
-    border-left: 4px solid #00ffff; /* Aksen warna di kiri */
-    border-radius: 8px;
-    padding: 30px;
-    margin-bottom: 40px;
-    font-size: 1.3em; 
-    font-weight: 400;
-    color: #fff;
+    background-color: rgba(15, 23, 42, 0.6);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 30px;
+    font-size: 1.15rem;
     line-height: 1.6;
-    box-shadow: none; /* Hilangkan semua glow */
+    text-align: left; /* Teks soal rata kiri agar enak dibaca */
 }
 
+/* TOMBOL */
 .button-group {
     display: flex;
     justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
+    gap: 20px;
 }
 
-
-/* ------------------------------------- */
-/* 4. STYLING BUTTONS (MODERN FLAT) */
-/* ------------------------------------- */
-
 button {
-    padding: 15px 40px;
-    font-size: 1.1em;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    padding: 14px 30px;
     border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    width: 100%; /* Tombol lebar penuh di dalam grup */
 }
 
 .btn-primary {
-    background-color: #00ffff; /* Cyan */
-    color: #000; /* Teks hitam agar kontras */
-}
-/* Hover: Hanya sedikit efek skala dan perubahan kecerahan, TANPA glow */
-.btn-primary:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2); /* Bayangan halus sekali */
+    background: linear-gradient(135deg, #0ea5e9, #0284c7); /* Biru modern */
+    color: white;
 }
 
 .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.1); /* Transparan */
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #334155;
+    color: white;
 }
-.btn-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+
+button:hover {
+    filter: brightness(1.1);
     transform: translateY(-2px);
 }
-/* Tombol Reward di halaman akhir */
+
+/* REWARD BUTTONS */
 .reward-btn {
-    text-shadow: none;
-    box-shadow: none;
-    border: none !important; /* Menghilangkan border warna-warni sebelumnya */
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s;
 }
+.btn-viu { background: #10b981; }
+.btn-alight { background: #3b82f6; }
+.btn-youtube { background: #ef4444; }
 
-
-/* ------------------------------------- */
-/* 5. RESPONSIVENESS (Mobile/HP) */
-/* ------------------------------------- */
-@media (max-width: 768px) {
-    body {
-        padding: 15px;
-        align-items: flex-start; /* Di HP, mulai dari atas */
-    }
-    .container {
-        padding: 25px 20px;
-        max-width: 100%;
-        margin-top: 20px;
-        border-radius: 12px;
-    }
-    h2 { font-size: 1.8em; }
-    h3 { font-size: 1.3em; }
-
-    .input-group input, .input-group select {
-        padding: 12px;
-        font-size: 1em;
-    }
-    .question-content {
-        padding: 20px;
-        font-size: 1.1em;
-    }
-    .button-group {
-        flex-direction: column;
-        gap: 15px;
-        width: 100%;
-    }
-    button {
-        width: 100%;
-        padding: 15px;
-    }
-}
-
-
-/* ------------------------------------- */
-/* 6. EFEK PARTIKEL DAN WATERMARK (SUBTLE/HALUS) */
-/* ------------------------------------- */
-
-.snowflake, .watermark {
+/* WATERMARK & BACKGROUND ANIMATION */
+#watermark-bg {
     position: fixed;
-    top: -10px;
-    z-index: -1; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
     pointer-events: none;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    /* Hilangkan text-shadow glow yang kuat */
-    text-shadow: none; 
-    opacity: 0.3; /* Dibuat lebih transparan agar tidak mengganggu */
 }
 
-.snowflake {
-    color: #a5f3fc; /* Cyan pucat */
-    animation-name: snowfall;
-}
-
-.watermark {
-    font-size: 10px; 
-    font-weight: 500;
-    color: #a5f3fc; /* Cyan pucat */
-    letter-spacing: 1px;
-    animation-name: watermarkFall;
+.falling-item {
+    position: absolute;
+    top: -50px;
+    color: rgba(56, 189, 248, 0.2); /* Biru sangat transparan */
+    animation: fall linear infinite;
+    font-size: 12px;
 }
