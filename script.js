@@ -1,9 +1,10 @@
-// *******************************************************************
-// ⚠️ PASTIKAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI SINI
+// URL GOOGLE APPS SCRIPT ANDA
 const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz_jXIpLvNsmUURxAjCFv43KNY8avsz5yVitnNS2F_MmluNV7aPKi2JJDrbcE4CKlDf/exec'; 
-// *******************************************************************
 
-// --- KUNCI JAWABAN ---
+// NOMOR WA PENELITI (Ganti dengan nomor asli!)
+const WA_NUMBER = '6281234567890';
+
+// DATA SOAL DAN KUNCI JAWABAN
 const KUNCI_JAWABAN = {
     'soal1': 'YA', 'soal2': 'YA', 'soal3': 'YA', 'soal4': 'YA', 'soal5': 'TIDAK',
     'soal6': 'YA', 'soal7': 'YA', 'soal8': 'YA', 'soal9': 'YA', 'soal10': 'YA',
@@ -34,310 +35,188 @@ const questions = [
     "20. Seks diluar nikah sama dengan seks bebas atau seks tidak aman"
 ];
 
-let currentPage = -1; 
+let currentPage = -1; // -1: Intro, 0: Identitas, 1-20: Soal, 21: Reward
 const userAnswers = {}; 
-const kuisionerForm = document.getElementById('kuisioner-form');
+const formContainer = document.getElementById('kuisioner-form');
 
+// --- FUNGSI RENDER HALAMAN ---
 
-// --- FUNGSI UTAMA RENDER HALAMAN ---
 function renderPage() {
-    kuisionerForm.innerHTML = ''; 
+    formContainer.innerHTML = '';
+    window.scrollTo(0,0); // Scroll ke atas setiap ganti halaman
 
-    if (currentPage === -1) { 
-        renderIntroPage();
-    } else if (currentPage === 0) { 
-        renderIdentitasPage();
-    } else if (currentPage >= 1 && currentPage <= questions.length) { 
-        renderQuestionPage(currentPage);
+    if (currentPage === -1) {
+        renderIntro();
+    } else if (currentPage === 0) {
+        renderIdentitas();
+    } else if (currentPage >= 1 && currentPage <= questions.length) {
+        renderQuestion(currentPage);
     } else if (currentPage === questions.length + 1) {
-        renderRewardPage();
+        renderReward();
     }
 }
 
-// --- (-1) RENDER HALAMAN PENGANTAR (Dark Mode Aesthetic) ---
-function renderIntroPage() {
-    // Styling di sini disederhanakan karena gaya utama ada di CSS
-    kuisionerForm.innerHTML = `
-        <div id="intro-page" style="text-align: center; padding: 10px 0;">
-            <h2 style="color: #00ffff; font-size: 2em; margin-bottom: 10px;">
-                🎉 Selamat Datang! 🎉
-            </h2>
-            <h3 style="color: #ff00ff; margin-bottom: 30px; font-weight: 500;">
-                Pemberitahuan Penting Mengenai Kuisioner
-            </h3>
-            
-            <div style="background-color: rgba(0, 255, 255, 0.05); padding: 25px; border-radius: 12px; border: 2px solid #00ffff; margin-bottom: 35px; text-align: left; box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);">
-                <p style="font-size: 1.1em; line-height: 1.7; color: #e0ffff;">
-                    Kuisioner ini merupakan bagian dari 
-                    <span style="font-weight: bold; color: #ff00ff;">Penelitian Tugas Kokulikuler</span> 
-                    yang dilaksanakan oleh kelompok 
-                    <span style="font-weight: bold; color: #ff00ff;">DYNA</span> 
-                    dari 
-                    <span style="font-weight: bold; color: #ff00ff;">Kelas 9B SMP Negeri 1 Kalasan</span>.
-                </p>
-                <hr style="border: 0; border-top: 1px solid rgba(0, 255, 255, 0.3); margin: 15px 0;">
-                <p style="font-size: 1em; color: #ccc;">
-                    Seluruh data dan jawaban yang Anda berikan akan dijaga kerahasiaannya dan hanya akan digunakan untuk tujuan akademis dan penelitian kelompok kami.
-                </p>
-            </div>
-            
-            <h4 style="color: #90ee90; margin-top: 30px; font-style: italic;">
-                Terima kasih atas kesediaan dan partisipasi Anda.
-            </h4>
-            
-            <button class="btn-primary" style="margin-top: 30px; padding: 15px 40px; font-size: 1.2em;" onclick="currentPage = 0; renderPage();">
-                <span style="margin-right: 10px;">➡️</span> LANJUT MENGISI DATA DIRI
-            </button>
+// 1. HALAMAN INTRO
+function renderIntro() {
+    formContainer.innerHTML = `
+        <h2>✨ Selamat Datang ✨</h2>
+        <h3>Kuisioner Penelitian Kelompok DYNA - Kelas 9B</h3>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin-bottom: 10px;">Halo! Terima kasih sudah mampir.</p>
+            <p>Data yang kamu isi di sini <strong>100% Aman & Rahasia</strong>. Hanya digunakan untuk tugas sekolah kami.</p>
         </div>
+
+        <button class="btn-primary" onclick="currentPage=0; renderPage()">Mulai Sekarang 🚀</button>
     `;
 }
 
-
-// --- 1. RENDER HALAMAN IDENTITAS BARU (Nama & Rentang Umur) ---
-function renderIdentitasPage() {
-    const ageRanges = [
-        'Pilih Rentang Usia', '10-19 tahun', '20-30 tahun', '>30 tahun'
-    ];
-    
-    const optionsHtml = ageRanges.map(range => 
-        `<option value="${range === 'Pilih Rentang Usia' ? '' : range}" ${userAnswers.umur === range ? 'selected' : ''}>${range}</option>`
-    ).join('');
-
-    kuisionerForm.innerHTML = `
-        <h2>Input Data Diri</h2>
-        <h3>Mohon Isi Data Diri Anda</h3>
+// 2. HALAMAN IDENTITAS
+function renderIdentitas() {
+    formContainer.innerHTML = `
+        <h2>Data Diri</h2>
+        <h3>Kenalan dulu yuk!</h3>
+        
         <div class="input-group">
-            <label for="nama">Nama:</label>
-            <input type="text" id="nama" value="${userAnswers.nama || ''}" required>
+            <label>Nama Lengkap / Panggilan</label>
+            <input type="text" id="nama" placeholder="Tulis namamu disini..." value="${userAnswers.nama || ''}">
         </div>
+
         <div class="input-group">
-            <label for="umur">Rentang Umur:</label>
-            <select id="umur" required>
-                ${optionsHtml}
+            <label>Rentang Usia</label>
+            <select id="umur">
+                <option value="">Pilih Usia...</option>
+                <option value="10-19 tahun">10-19 tahun</option>
+                <option value="20-30 tahun">20-30 tahun</option>
+                <option value=">30 tahun">Di atas 30 tahun</option>
             </select>
         </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="btn-primary" onclick="nextPageIdentitas()">Lanjut ke Quisioner</button>
-        </div>
+
+        <button class="btn-primary" onclick="submitIdentitas()">Lanjut ke Soal ➡️</button>
     `;
 }
 
-function nextPageIdentitas() {
+function submitIdentitas() {
     const nama = document.getElementById('nama').value.trim();
-    const umur = document.getElementById('umur').value; 
-
-    if (!nama) {
-        alert('Mohon lengkapi Nama Anda.');
-        return;
-    }
+    const umur = document.getElementById('umur').value;
     
-    if (!umur) {
-        alert('Mohon pilih Rentang Umur Anda.');
+    if(!nama || !umur) {
+        alert("Mohon lengkapi nama dan usia dulu ya! 🙏");
         return;
     }
-
     userAnswers.nama = nama;
-    userAnswers.umur = umur; 
-    
-    currentPage = 1; 
+    userAnswers.umur = umur;
+    currentPage = 1;
     renderPage();
 }
 
-
-// --- 2. RENDER HALAMAN SOAL ---
-function renderQuestionPage(qNumber) {
-    const questionIndex = qNumber - 1;
-    const questionText = questions[questionIndex];
-
-    kuisionerForm.innerHTML = `
-        <h2>Soal ${qNumber} dari ${questions.length}</h2>
-        <div class="question-content">
-            ${questionText}
-        </div>
-        <div class="button-group">
-            <button class="btn-primary" onclick="submitAnswer(${qNumber}, 'YA')">YA</button>
-            <button class="btn-secondary" onclick="submitAnswer(${qNumber}, 'TIDAK')">TIDAK</button>
-        </div>
-    `;
-}
-
-function calculateScore() {
-    let correctCount = 0;
-    
-    for (let i = 1; i <= questions.length; i++) {
-        const key = 'soal' + i; 
+// 3. HALAMAN SOAL
+function renderQuestion(idx) {
+    const text = questions[idx-1];
+    formContainer.innerHTML = `
+        <h2>Soal ${idx} / 20</h2>
+        <div class="question-content">${text}</div>
         
-        if (userAnswers[key] && userAnswers[key] === KUNCI_JAWABAN[key]) {
-            correctCount++; 
-        }
-    }
-    
-    userAnswers.totalBenar = correctCount; 
+        <div class="button-group">
+            <button class="btn-primary" onclick="answerQuestion(${idx}, 'YA')">YA</button>
+            <button class="btn-secondary" onclick="answerQuestion(${idx}, 'TIDAK')">TIDAK</button>
+        </div>
+    `;
 }
 
-function submitAnswer(qNumber, answer) {
-    userAnswers['soal' + qNumber] = answer; 
+function answerQuestion(idx, ans) {
+    userAnswers['soal'+idx] = ans;
     currentPage++;
-
-    if (currentPage <= questions.length) {
-        renderPage(); 
+    
+    if(currentPage > questions.length) {
+        finishQuiz();
     } else {
-        calculateScore(); 
-        submitDataToSheets();
+        renderPage();
     }
 }
 
+// 4. LOGIKA SELESAI & KIRIM DATA
+function finishQuiz() {
+    // Hitung Skor
+    let skor = 0;
+    for(let i=1; i<=20; i++) {
+        if(userAnswers['soal'+i] === KUNCI_JAWABAN['soal'+i]) skor++;
+    }
+    userAnswers.totalBenar = skor;
 
-// --- 3. KIRIM DATA KE GOOGLE SHEETS (DENGAN SPINNER) ---
-async function submitDataToSheets() {
-    kuisionerForm.innerHTML = `
-        <div id="loading-message">
-            <div class="loading-spinner"></div>
-            <h3>Sedang Mengirim Data...</h3>
-            <p style="color: #ccc;">Mohon tunggu sebentar hingga muncul ucapan terima kasih.</p>
-        </div>
+    // Tampilan Loading
+    formContainer.innerHTML = `
+        <h2>Menyimpan Jawaban...</h2>
+        <p>Mohon tunggu sebentar ya ⏳</p>
     `;
-    
+
+    // Kirim ke Google Sheets
     const params = new URLSearchParams();
-    for (const key in userAnswers) {
-        params.append(key, userAnswers[key]);
-    }
+    for(let key in userAnswers) params.append(key, userAnswers[key]);
 
-    try {
-        const response = await fetch(GAS_WEB_APP_URL, {
-            method: 'POST',
-            mode: 'cors', 
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: params.toString()
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.result === "success") {
-            currentPage = questions.length + 1; 
-            renderPage();
-        } else {
-            kuisionerForm.innerHTML = '<h3 style="color:red;">ERROR Pengiriman:</h3><p style="color: #ccc;">Gagal menyimpan data ke Google Sheets. Detail: ' + (result.message || 'Unknown Error') + '</p>';
-        }
-
-    } catch (error) {
-        console.error('Submission Error:', error);
-        kuisionerForm.innerHTML = `
-            <h3 style="color:red;">KESALAHAN JARINGAN/SISTEM</h3>
-            <p style="color: #ccc;">Terjadi kesalahan saat menghubungi server Google Apps Script. (${error.message})</p>
-            <button class="btn-primary" style="margin-top:20px;" onclick="window.location.reload()">Coba Lagi</button>
-        `;
-    }
-}
-
-
-// --- 4. RENDER HALAMAN TERIMA KASIH (REWARD Opsional) ---
-function renderRewardPage() {
-    
-    // ⚠️ GANTI DENGAN NOMOR WHATSAPP AKTIF PENELITI!
-    const whatsappNumber = '6281227324594'; 
-
-    function createWhatsAppLink(reward) {
-        let message = `Halo, saya ${userAnswers.nama || 'Pengguna'} dari ${userAnswers.umur || 'Rentang Usia'}. Saya telah menyelesaikan kuisioner dan memilih hadiah: ${reward}. Mohon petunjuk klaim hadiah ini. Terima kasih!`;
-        return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    }
-
-    kuisionerForm.innerHTML = `
-        <div id="reward-page" style="text-align: center; padding: 40px;">
-            <h2 style="color: #00ffff; font-size: 2.2em; margin-bottom: 15px;">
-                ✅ Kuisioner Selesai!
-            </h2>
-            <h3 style="color: #ff00ff; font-size: 1.5em; margin-bottom: 25px;">
-                Terima kasih banyak, 
-                <span style="font-weight: bold; color: #ff00ff;">${userAnswers.nama || 'Pengguna'}</span>!
-            </h3>
-            
-            <div style="background-color: rgba(0, 255, 255, 0.05); padding: 20px; border-radius: 10px; border: 1px solid #00ffff; margin-bottom: 30px;">
-                <p style="font-size: 1.1em; color: #ccc;">
-                    Data Anda telah berhasil direkam dan disimpan.
-                </p>
-            </div>
-            
-            <div id="reward-box" class="reward-box" style="background-color: rgba(255, 0, 255, 0.05); border: 2px solid #ff00ff; border-radius: 15px; padding: 25px; box-shadow: 0 0 10px rgba(255, 0, 255, 0.5); margin-bottom: 30px;">
-                <h4 style="color: #ff00ff; font-size: 1.4em; margin-bottom: 10px; font-weight: bold;">🎁 Klaim Hadiah Anda (Opsional)!</h4>
-                <p style="color: #ccc; margin-bottom: 25px; font-style: italic;">Anda berhak memilih salah satu hadiah di bawah ini sebagai apresiasi.</p>
-                
-                <div class="reward-buttons" style="display: flex; flex-direction: column; gap: 15px;">
-                    
-                    <a href="${createWhatsAppLink('Viu Premium Seumur Hidup')}" target="_blank" class="reward-btn btn-viu">
-                        👑 Viu Premium Seumur Hidup
-                    </a>
-                    
-                    <a href="${createWhatsAppLink('Alight Motion Pro 1 Tahun')}" target="_blank" class="reward-btn btn-alight">
-                        🎬 Alight Motion Pro 1 Tahun
-                    </a>
-                    
-                    <a href="${createWhatsAppLink('YouTube Premium 1 Bulan')}" target="_blank" class="reward-btn btn-youtube">
-                        🔴 YouTube Premium 1 Bulan
-                    </a>
-                </div>
-            </div>
-            <hr style="margin: 30px auto; width: 50%; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.2);">
-            
-            <button class="btn-secondary" onclick="window.close()" style="margin-top: 20px;">
-                TUTUP HALAMAN / SELESAI
-            </button>
-
-            <p style="font-size: 0.9em; color: #ccc; margin-top: 20px;">
-                Jika Anda sudah mengklaim hadiah atau tidak ingin mengklaim, silakan tekan tombol di atas.
-            </p>
-        </div>
-    `;
-}
-
-// --- LOGIKA WATERMARK DAN SALJU JATUH (Aesthetic Background) ---
-
-const WATERMARK_TEXT = 'Made by Yunan';
-const BACKGROUND_SYMBOLS = ['❄', '⭐', '✨', '⚡'];
-
-function createBackgroundParticle(type = 'watermark') {
-    const parentElement = document.getElementById('watermark-bg');
-    if (!parentElement) return;
-
-    const particle = document.createElement('div');
-    
-    if (type === 'watermark') {
-        particle.className = 'watermark';
-        particle.textContent = WATERMARK_TEXT;
-        particle.style.animationDuration = Math.random() * 15 + 15 + 's'; // 15-30s
-        particle.style.animationDelay = Math.random() * 15 + 's'; 
-        particle.style.opacity = Math.random() * 0.7 + 0.3; 
-
-    } else { // Salju/Simbol
-        particle.className = 'snowflake';
-        const symbol = BACKGROUND_SYMBOLS[Math.floor(Math.random() * BACKGROUND_SYMBOLS.length)];
-        particle.innerHTML = symbol;
-        particle.style.animationDuration = Math.random() * 10 + 8 + 's'; // 8-18s
-        particle.style.animationDelay = Math.random() * 8 + 's';
-        particle.style.fontSize = Math.random() * 12 + 8 + 'px'; 
-    }
-    
-    particle.style.left = Math.random() * window.innerWidth + 'px';
-    parentElement.appendChild(particle);
-
-    particle.addEventListener('animationend', () => {
-        particle.remove();
+    fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        body: params
+    })
+    .then(res => res.json())
+    .then(data => {
+        currentPage = questions.length + 1;
+        renderPage();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Gagal mengirim data (Masalah Koneksi). Coba lagi ya.");
+        currentPage = questions.length + 1; // Tetap lanjut ke reward meski error (opsional)
+        renderPage();
     });
 }
 
-function startBackgroundEffects() {
-    // Membuat Watermark (Interval Lambat)
-    setInterval(() => createBackgroundParticle('watermark'), 3000); 
-    
-    // Membuat Salju/Simbol (Interval Cepat)
-    setInterval(() => createBackgroundParticle('symbol'), 500); 
+// 5. HALAMAN REWARD
+function renderReward() {
+    const waLink = (msg) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    const msgTemplate = `Halo kak, saya ${userAnswers.nama}. Saya sudah selesai isi kuisioner DYNA dan mau klaim: `;
+
+    formContainer.innerHTML = `
+        <h2>🎉 Selesai! 🎉</h2>
+        <h3>Terima kasih <strong>${userAnswers.nama}</strong>!</h3>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <p>Jawabanmu sudah kami terima.</p>
+        </div>
+
+        <p style="margin-bottom: 15px;">🎁 <strong>Pilih Hadiah (Opsional):</strong></p>
+        
+        <a href="${waLink(msgTemplate + 'Viu Premium')}" target="_blank" class="reward-btn btn-viu">Viu Premium Seumur Hidup</a>
+        <a href="${waLink(msgTemplate + 'Alight Motion Pro')}" target="_blank" class="reward-btn btn-alight">Alight Motion Pro 1 Tahun</a>
+        <a href="${waLink(msgTemplate + 'Youtube Premium')}" target="_blank" class="reward-btn btn-youtube">Youtube Premium 1 Bulan</a>
+
+        <button class="btn-secondary" onclick="window.close()" style="margin-top: 20px;">Tutup / Selesai</button>
+    `;
 }
 
+// --- EFEK BACKGROUND (Watermark & Salju) ---
+function startBackground() {
+    const bg = document.getElementById('watermark-bg');
+    const items = ['❄️', '✨', 'Made by Yunan Asghar']; // Campuran salju dan watermark
+    
+    setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'falling-item';
+        el.innerText = items[Math.floor(Math.random() * items.length)];
+        
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (Math.random() * 5 + 5) + 's'; // 5-10 detik jatuh
+        el.style.fontSize = Math.random() < 0.3 ? '10px' : '16px'; // Ukuran variasi
+        
+        bg.appendChild(el);
+        
+        // Hapus elemen setelah animasi selesai agar memori tidak penuh
+        setTimeout(() => { el.remove() }, 10000);
+    }, 800); // Muncul setiap 0.8 detik
+}
 
-// --- INISIALISASI ---
+// MULAI APLIKASI
 document.addEventListener('DOMContentLoaded', () => {
     renderPage();
-    startBackgroundEffects();
+    startBackground();
 });
